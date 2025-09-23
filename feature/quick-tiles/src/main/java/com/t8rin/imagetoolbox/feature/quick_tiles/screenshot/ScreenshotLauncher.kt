@@ -26,11 +26,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
 import com.t8rin.imagetoolbox.core.resources.R
 import com.t8rin.imagetoolbox.core.ui.utils.helper.ContextUtils.buildIntent
+import com.t8rin.imagetoolbox.core.ui.utils.helper.ContextUtils.getScreenExtra
 import com.t8rin.imagetoolbox.core.ui.utils.helper.ContextUtils.postToast
-import com.t8rin.imagetoolbox.core.ui.utils.helper.DataExtra
-import com.t8rin.imagetoolbox.core.ui.utils.helper.ResultCode
-import com.t8rin.imagetoolbox.core.ui.utils.helper.getTileScreenAction
-import com.t8rin.imagetoolbox.core.ui.utils.helper.putTileScreenAction
+import com.t8rin.imagetoolbox.core.ui.utils.helper.ContextUtils.putScreenExtra
 
 class ScreenshotLauncher : AppCompatActivity() {
 
@@ -44,15 +42,16 @@ class ScreenshotLauncher : AppCompatActivity() {
             onFailure(NullPointerException("No projection manager"))
         }
 
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             runCatching {
-                val resultCode = it.resultCode
-                val data = it.data
+                val resultCode = result.resultCode
+                val data = result.data
                 if (resultCode == RESULT_OK) {
                     val serviceIntent = buildIntent(ScreenshotService::class.java) {
-                        putExtra(DataExtra, data)
-                        putExtra(ResultCode, resultCode)
-                        putTileScreenAction(intent.getTileScreenAction())
+                        putExtra(DATA_EXTRA, data)
+                        putExtra(RESULT_CODE_EXTRA, resultCode)
+                        action = intent.action
+                        putScreenExtra(intent.getScreenExtra())
                     }
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

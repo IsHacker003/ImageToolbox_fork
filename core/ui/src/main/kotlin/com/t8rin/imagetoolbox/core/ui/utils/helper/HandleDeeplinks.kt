@@ -25,14 +25,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.t8rin.imagetoolbox.core.domain.BackupFileExtension
 import com.t8rin.imagetoolbox.core.domain.model.ExtraDataType
 import com.t8rin.imagetoolbox.core.resources.R
-import com.t8rin.imagetoolbox.core.ui.utils.appContext
+import com.t8rin.imagetoolbox.core.ui.utils.helper.ContextUtils.getScreenExtra
 import com.t8rin.imagetoolbox.core.ui.utils.helper.ContextUtils.getScreenOpeningShortcut
 import com.t8rin.imagetoolbox.core.ui.utils.helper.IntentUtils.parcelable
 import com.t8rin.imagetoolbox.core.ui.utils.helper.IntentUtils.parcelableArrayList
 import com.t8rin.imagetoolbox.core.ui.utils.navigation.Screen
+import com.t8rin.imagetoolbox.core.utils.appContext
 
-fun parseImageFromIntent(
-    intent: Intent?,
+fun Intent?.handleDeeplinks(
     onStart: () -> Unit,
     onColdStart: () -> Unit,
     onShowToast: (message: String, icon: ImageVector) -> Unit,
@@ -43,7 +43,9 @@ fun parseImageFromIntent(
     onWantGithubReview: () -> Unit,
     isOpenEditInsteadOfPreview: Boolean,
 ) {
-    if (intent == null) return
+    if (this == null) return
+
+    val intent = this
 
     onStart()
     if (intent.type != null && !isHasUris) onColdStart()
@@ -82,13 +84,15 @@ fun parseImageFromIntent(
 
                 Intent.ACTION_SEND -> {
                     intent.parcelable<Uri>(Intent.EXTRA_STREAM)?.let {
-                        if (intent.getTileScreenAction() == PickColorAction) {
-                            onNavigate(Screen.PickColorFromImage(it))
-                        } else {
-                            if (intent.type?.contains("gif") == true) {
-                                onHasExtraDataType(ExtraDataType.Gif)
+                        when (intent.getScreenExtra()) {
+                            is Screen.PickColorFromImage -> onNavigate(Screen.PickColorFromImage(it))
+                            is Screen.GeneratePalette -> onNavigate(Screen.GeneratePalette(it))
+                            else -> {
+                                if (intent.type?.contains("gif") == true) {
+                                    onHasExtraDataType(ExtraDataType.Gif)
+                                }
+                                onGetUris(listOf(it))
                             }
-                            onGetUris(listOf(it))
                         }
                     }
                 }

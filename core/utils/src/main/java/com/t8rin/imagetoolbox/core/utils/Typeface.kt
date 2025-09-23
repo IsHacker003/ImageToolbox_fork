@@ -15,9 +15,17 @@
  * along with this program.  If not, see <http://www.apache.org/licenses/LICENSE-2.0>.
  */
 
-package com.t8rin.imagetoolbox.app.presentation.components.utils
+package com.t8rin.imagetoolbox.core.utils
 
-import android.app.Application
-import com.t8rin.opencv_tools.utils.OpenCV
+import android.graphics.Typeface
+import androidx.core.content.res.ResourcesCompat
+import com.t8rin.imagetoolbox.core.settings.domain.model.FontType
 
-fun Application.initOpenCV() = OpenCV.init(this)
+fun FontType?.toTypeface(): Typeface? = when (this) {
+    null -> null
+    is FontType.File -> Typeface.createFromFile(this.path)
+    is FontType.Resource -> ResourcesCompat.getFont(
+        appContext,
+        this.resId
+    )
+}

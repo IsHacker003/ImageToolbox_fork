@@ -1,6 +1,6 @@
 /*
  * ImageToolbox is an image editor for android
- * Copyright (c) 2024 T8RIN (Malik Mukhametzyanov)
+ * Copyright (c) 2025 T8RIN (Malik Mukhametzyanov)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,8 @@
  * along with this program.  If not, see <http://www.apache.org/licenses/LICENSE-2.0>.
  */
 
-package com.t8rin.imagetoolbox.feature.quick_tiles.tiles
+package com.t8rin.imagetoolbox.feature.quick_tiles.screenshot
 
-import android.os.Build
-import android.service.quicksettings.TileService
-import androidx.annotation.RequiresApi
-import com.t8rin.imagetoolbox.core.ui.utils.helper.AppActivityClass
-import com.t8rin.imagetoolbox.feature.quick_tiles.utils.startActivityAndCollapse
-
-
-@RequiresApi(Build.VERSION_CODES.N)
-class ImageToolboxTile : TileService() {
-
-    override fun onClick() {
-        super.onClick()
-        startActivityAndCollapse(clazz = AppActivityClass)
-    }
-
-}
+internal const val SCREENSHOT_ACTION = "shot"
+internal const val DATA_EXTRA = "data"
+internal const val RESULT_CODE_EXTRA = "resultCode"

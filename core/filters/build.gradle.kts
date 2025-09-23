@@ -27,6 +27,9 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.ui)
     implementation(projects.core.resources)
+    implementation(projects.core.settings)
+    implementation(projects.core.utils)
+    
     implementation(libs.kotlin.reflect)
     implementation(libs.toolbox.curves)
     implementation(libs.toolbox.ascii)

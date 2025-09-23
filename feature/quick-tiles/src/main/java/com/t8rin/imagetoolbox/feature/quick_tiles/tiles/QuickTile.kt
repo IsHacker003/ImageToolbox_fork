@@ -1,6 +1,6 @@
 /*
  * ImageToolbox is an image editor for android
- * Copyright (c) 2024 T8RIN (Malik Mukhametzyanov)
+ * Copyright (c) 2025 T8RIN (Malik Mukhametzyanov)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,31 @@
 
 package com.t8rin.imagetoolbox.feature.quick_tiles.tiles
 
-import android.os.Build
+import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.service.quicksettings.TileService
-import androidx.annotation.RequiresApi
-import com.t8rin.imagetoolbox.core.ui.utils.helper.ScreenshotAction
-import com.t8rin.imagetoolbox.feature.quick_tiles.utils.startActivityAndCollapse
+import androidx.core.service.quicksettings.PendingIntentActivityWrapper
+import androidx.core.service.quicksettings.TileServiceCompat
 
-@RequiresApi(Build.VERSION_CODES.N)
-class TakeScreenshotTile : TileService() {
+@SuppressLint("NewApi")
+sealed class QuickTile(
+    private val tileAction: TileAction
+) : TileService() {
 
     override fun onClick() {
         super.onClick()
-        startActivityAndCollapse(ScreenshotAction)
+        runCatching {
+            TileServiceCompat.startActivityAndCollapse(
+                this,
+                PendingIntentActivityWrapper(
+                    applicationContext,
+                    0,
+                    tileAction.toIntent(this),
+                    PendingIntent.FLAG_UPDATE_CURRENT,
+                    false
+                )
+            )
+        }
     }
 
 }

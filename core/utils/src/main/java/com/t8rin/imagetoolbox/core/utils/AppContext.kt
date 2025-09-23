@@ -1,6 +1,6 @@
 /*
  * ImageToolbox is an image editor for android
- * Copyright (c) 2024 T8RIN (Malik Mukhametzyanov)
+ * Copyright (c) 2025 T8RIN (Malik Mukhametzyanov)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,28 @@
  * along with this program.  If not, see <http://www.apache.org/licenses/LICENSE-2.0>.
  */
 
-package com.t8rin.imagetoolbox.feature.quick_tiles.tiles
+package com.t8rin.imagetoolbox.core.utils
 
-import android.os.Build
-import android.service.quicksettings.TileService
-import androidx.annotation.RequiresApi
-import com.t8rin.imagetoolbox.core.ui.utils.helper.PickColorAction
-import com.t8rin.imagetoolbox.feature.quick_tiles.utils.startActivityAndCollapse
+import android.app.Application
+import android.content.ContextWrapper
 
-@RequiresApi(Build.VERSION_CODES.N)
-class ColorPickerTile : TileService() {
+class AppContext private constructor(
+    application: Application
+) : ContextWrapper(application) {
 
-    override fun onClick() {
-        super.onClick()
-        startActivityAndCollapse(PickColorAction)
+    companion object {
+        internal var appContext: AppContext? = null
+
+        internal fun init(application: Application) {
+            appContext = AppContext(application)
+        }
     }
 
 }
+
+fun Application.initAppContext() = AppContext.init(this)
+
+val appContext: AppContext
+    get() = checkNotNull(AppContext.appContext) {
+        "AppContext not initialized"
+    }

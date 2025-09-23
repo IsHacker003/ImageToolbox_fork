@@ -1,6 +1,6 @@
 /*
  * ImageToolbox is an image editor for android
- * Copyright (c) 2024 T8RIN (Malik Mukhametzyanov)
+ * Copyright (c) 2025 T8RIN (Malik Mukhametzyanov)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,14 @@
  * along with this program.  If not, see <http://www.apache.org/licenses/LICENSE-2.0>.
  */
 
-package com.t8rin.imagetoolbox.core.ui.utils.helper
+package com.t8rin.imagetoolbox.app.presentation.components.functions
 
-import android.content.Intent
-import com.t8rin.imagetoolbox.core.ui.utils.navigation.Screen
+import androidx.compose.foundation.ComposeFoundationFlags.isPausableCompositionInPrefetchEnabled
+import androidx.compose.material3.isCheckboxStylingFixEnabled
+import com.arkivanov.decompose.DecomposeExperimentFlags.duplicateConfigurationsEnabled
 
-const val ScreenshotAction = "shot"
-
-val PickColorAction = Screen.PickColorFromImage::class.simpleName
-
-const val EditAction = "edit"
-
-const val DataExtra = "data"
-
-const val ResultCode = "resultCode"
-
-fun Intent.putTileScreenAction(screenAction: String?): Intent = apply {
-    putExtra("screen", screenAction)
+internal fun setupFlags() {
+    isCheckboxStylingFixEnabled = true
+    duplicateConfigurationsEnabled = true
+    isPausableCompositionInPrefetchEnabled = true
 }
-
-fun Intent.getTileScreenAction(): String? = getStringExtra("screen")
